@@ -1,0 +1,1 @@
+export const ROLES = { LANDLORD: 'LANDLORD', TENANT: 'TENANT' };

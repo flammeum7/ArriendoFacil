@@ -1,0 +1,326 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- ENUMS ----------
+
+enum Role {
+  LANDLORD
+  TENANT
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  ROOM
+  COMMERCIAL
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+}
+
+enum ContractStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  RENEWED
+}
+
+enum PaymentStatus {
+  PENDING
+  UNDER_REVIEW
+  PAID
+  OVERDUE
+  REJECTED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  YAPE
+  PLIN
+  DEPOSIT
+  CASH
+}
+
+enum DocumentType {
+  CONTRACT
+  INVOICE
+  PAYMENT_RECEIPT
+  OTHER
+}
+
+enum IncidentType {
+  COMPLAINT
+  CLAIM
+  MAINTENANCE_REQUEST
+}
+
+enum IncidentPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum IncidentStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum ServiceType {
+  WATER
+  ELECTRICITY
+  INTERNET
+}
+
+enum NotificationType {
+  PAYMENT_DUE_SOON
+  RECEIPT_UPLOADED
+  RECEIPT_APPROVED
+  RECEIPT_REJECTED
+  NEW_INCIDENT
+  INCIDENT_RESPONSE
+  NEW_DOCUMENT
+  CONTRACT_EXPIRING
+}
+
+// ---------- MODELOS ----------
+
+model User {
+  id                     Int       @id @default(autoincrement())
+  role                   Role
+  fullName               String
+  email                  String    @unique
+  passwordHash           String
+  dni                    String?   @unique @db.VarChar(8)
+  phone                  String?
+  active                 Boolean   @default(true)
+  mustChangePassword     Boolean   @default(false)
+  tempPasswordExpiresAt  DateTime?
+  passwordResetTokenHash String?
+  passwordResetExpiresAt DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  propertiesOwned   Property[]         @relation("PropertyOwner")
+  contracts         Contract[]         @relation("TenantContracts")
+  payments          Payment[]          @relation("TenantPayments")
+  ownedDocuments    Document[]         @relation("DocumentOwner")
+  uploadedDocuments Document[]         @relation("DocumentUploader")
+  incidents         Incident[]         @relation("TenantIncidents")
+  incidentResponses IncidentResponse[] @relation("ResponseAuthor")
+  services          Service[]          @relation("TenantServices")
+  notifications     Notification[]
+  auditLogs         AuditLog[]         @relation("AuditActor")
+
+  @@index([role])
+}
+
+model Property {
+  id            Int            @id @default(autoincrement())
+  address       String
+  type          PropertyType
+  unitNumber    String?
+  description   String?        @db.Text
+  rooms         Int            @default(0)
+  referenceRent Decimal        @db.Decimal(10, 2)
+  status        PropertyStatus @default(AVAILABLE)
+  ownerId       Int
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  owner     User       @relation("PropertyOwner", fields: [ownerId], references: [id])
+  contracts Contract[]
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+model Contract {
+  id                 Int            @id @default(autoincrement())
+  tenantId           Int
+  propertyId         Int
+  startDate          DateTime       @db.Date
+  endDate            DateTime       @db.Date
+  rent               Decimal        @db.Decimal(10, 2)
+  deposit            Decimal        @db.Decimal(10, 2)
+  conditions         String?        @db.Text
+  status             ContractStatus @default(ACTIVE)
+  dueDayOffset       Int            @default(5)
+  previousContractId Int?           @unique
+  activePropertyKey  Int?           @unique
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  tenant           User      @relation("TenantContracts", fields: [tenantId], references: [id])
+  property         Property  @relation(fields: [propertyId], references: [id])
+  previousContract Contract? @relation("ContractRenewal", fields: [previousContractId], references: [id])
+  renewedInto      Contract? @relation("ContractRenewal")
+  payments         Payment[]
+  documents        Document[]
+
+  @@index([tenantId])
+  @@index([propertyId])
+  @@index([status])
+}
+
+model Payment {
+  id              Int            @id @default(autoincrement())
+  contractId      Int
+  tenantId        Int
+  periodStart     DateTime       @db.Date
+  periodEnd       DateTime       @db.Date
+  dueDate         DateTime       @db.Date
+  paymentDate     DateTime?
+  amount          Decimal        @db.Decimal(10, 2)
+  method          PaymentMethod?
+  status          PaymentStatus  @default(PENDING)
+  rejectionReason String?        @db.Text
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  contract  Contract   @relation(fields: [contractId], references: [id])
+  tenant    User       @relation("TenantPayments", fields: [tenantId], references: [id])
+  documents Document[]
+
+  @@unique([contractId, periodStart])
+  @@index([tenantId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+model Document {
+  id           Int          @id @default(autoincrement())
+  type         DocumentType
+  ownerId      Int
+  uploadedById Int
+  contractId   Int?
+  paymentId    Int?
+  storagePath  String
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  deletedAt    DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  owner      User      @relation("DocumentOwner", fields: [ownerId], references: [id])
+  uploadedBy User      @relation("DocumentUploader", fields: [uploadedById], references: [id])
+  contract   Contract? @relation(fields: [contractId], references: [id])
+  payment    Payment?  @relation(fields: [paymentId], references: [id])
+
+  @@index([ownerId])
+  @@index([type])
+  @@index([contractId])
+  @@index([paymentId])
+}
+
+model Incident {
+  id          Int              @id @default(autoincrement())
+  tenantId    Int
+  type        IncidentType
+  title       String
+  description String           @db.Text
+  priority    IncidentPriority @default(MEDIUM)
+  status      IncidentStatus   @default(OPEN)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  tenant      User                 @relation("TenantIncidents", fields: [tenantId], references: [id])
+  responses   IncidentResponse[]
+  attachments IncidentAttachment[]
+
+  @@index([tenantId])
+  @@index([status])
+}
+
+model IncidentResponse {
+  id         Int      @id @default(autoincrement())
+  incidentId Int
+  authorId   Int
+  message    String   @db.Text
+  createdAt  DateTime @default(now())
+
+  incident    Incident             @relation(fields: [incidentId], references: [id])
+  author      User                 @relation("ResponseAuthor", fields: [authorId], references: [id])
+  attachments IncidentAttachment[]
+
+  @@index([incidentId])
+}
+
+model IncidentAttachment {
+  id           Int      @id @default(autoincrement())
+  incidentId   Int?
+  responseId   Int?
+  storagePath  String
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  createdAt    DateTime @default(now())
+
+  incident Incident?         @relation(fields: [incidentId], references: [id])
+  response IncidentResponse? @relation(fields: [responseId], references: [id])
+
+  @@index([incidentId])
+  @@index([responseId])
+}
+
+model Service {
+  id           Int         @id @default(autoincrement())
+  tenantId     Int
+  type         ServiceType
+  period       String
+  consumption  Decimal?    @db.Decimal(10, 2)
+  unit         String?
+  amount       Decimal     @db.Decimal(10, 2)
+  observations String?     @db.Text
+  recordedAt   DateTime    @default(now())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  tenant User @relation("TenantServices", fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([type])
+}
+
+model Notification {
+  id            Int              @id @default(autoincrement())
+  userId        Int
+  type          NotificationType
+  message       String
+  read          Boolean          @default(false)
+  relatedEntity String?
+  relatedId     Int?
+  dedupeKey     String?          @unique
+  createdAt     DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([read])
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  actorId   Int
+  action    String
+  entity    String
+  entityId  Int?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  actor User @relation("AuditActor", fields: [actorId], references: [id])
+
+  @@index([actorId])
+  @@index([entity, entityId])
+}

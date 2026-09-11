@@ -1,0 +1,22 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno (los .env.example SÍ se versionan)
+.env
+*.env
+!*.env.example
+
+# Archivos subidos (privados, no van a Git)
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build del frontend
+frontend/dist/
+
+# Sistema / editor
+.DS_Store
+.vscode/

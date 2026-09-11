@@ -1,0 +1,22 @@
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3, h4 { margin: 0 0 var(--sp-3); font-weight: 600; }
+input, button, select, textarea { font-family: inherit; font-size: inherit; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 8px; }
+
+.af-container { width: 100%; max-width: 1200px; margin: 0 auto; padding: var(--sp-5); }
+.af-center { display: flex; align-items: center; justify-content: center; }

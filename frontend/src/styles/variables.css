@@ -1,0 +1,53 @@
+:root {
+  /* Superficies (tema oscuro) */
+  --color-bg: #0f1720;
+  --color-bg-elevated: #16212c;
+  --color-surface: #1c2a37;
+  --color-surface-hover: #243545;
+  --color-border: #2c3e4e;
+
+  /* Teal / verde azulado (color principal) */
+  --color-primary: #14b8a6;
+  --color-primary-hover: #0d9488;
+  --color-primary-soft: rgba(20, 184, 166, 0.12);
+  --color-on-primary: #04211d;
+
+  /* Texto */
+  --color-text: #e6eef2;
+  --color-text-muted: #9fb0bd;
+  --color-text-faint: #6b7d8a;
+
+  /* Estados */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #38bdf8;
+
+  /* Tipografía */
+  --font-sans: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+
+  /* Espaciado */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-8: 3rem;
+
+  /* Radios y sombras */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.35);
+
+  /* Layout */
+  --header-height: 64px;
+  --sidebar-width: 240px;
+}
