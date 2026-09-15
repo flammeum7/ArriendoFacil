@@ -10,7 +10,11 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.js",
+    "test": "dotenv -e .env.test -- jest --config jest.config.js --runInBand",
+    "test:unit": "dotenv -e .env.test -- jest --config jest.config.js tests/contracts.unit.test.js tests/payments.validation.test.js",
+    "test:integration": "dotenv -e .env.test -- jest --config jest.config.js tests/contracts.integration.test.js tests/payments.integration.test.js --runInBand",
+    "test:migrate": "dotenv -e .env.test -- prisma migrate deploy"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -31,6 +35,10 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "prisma": "^5.22.0"
+    "cross-env": "^10.1.0",
+    "dotenv-cli": "^11.0.0",
+    "jest": "^30.5.1",
+    "prisma": "^5.22.0",
+    "supertest": "^7.2.2"
   }
 }
