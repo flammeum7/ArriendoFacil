@@ -10,6 +10,7 @@ const router = Router();
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
+  skip: () => process.env.DISABLE_RATE_LIMIT === 'true',
   standardHeaders: true,
   legacyHeaders: false,
   message: {
