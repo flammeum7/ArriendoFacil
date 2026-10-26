@@ -1,12 +1,13 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-const BASE = 'http://127.0.0.1:3000/api';
-const ADMIN = { email: 'admin@arriendofacil.com', password: 'Admin2026' };
+const BASE = __ENV.BASE_URL || 'http://127.0.0.1:3001/api';
+const ADMIN = { email: 'admin@arriendofacil.com', password: __ENV.ADMIN_PASS || 'Admin2026' };
 const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
 export const options = {
   scenarios: {
+    
     login: {
       executor: 'constant-vus',
       vus: 10,
