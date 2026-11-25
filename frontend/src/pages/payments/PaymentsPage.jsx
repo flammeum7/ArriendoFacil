@@ -80,7 +80,8 @@ export default function PaymentsPage() {
     } catch (err) { setError(err.response?.data?.message || 'No se pudo subir'); }
   };
 
-  const date = (d) => (d ? new Date(d).toLocaleDateString('es-PE') : '—');
+  // Periodo y vencimiento son fechas sin hora (@db.Date): mostrarlas en UTC (INC-03)
+  const date = (d) => (d ? new Date(d).toLocaleDateString('es-PE', { timeZone: 'UTC' }) : '—');
   const money = (n) => `S/ ${Number(n).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`;
 
   const columns = [
@@ -143,8 +144,8 @@ export default function PaymentsPage() {
         </>}>
         {error && <div className="af-alert af-alert--error">{error}</div>}
         <div className="af-field">
-          <label className="af-label">Archivo (PDF, JPG o PNG · máx 5 MB)</label>
-          <input className="af-input" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setFile(e.target.files[0])} />
+          <label className="af-label" htmlFor="receiptFile">Archivo (PDF, JPG o PNG · máx 5 MB)</label>
+          <input id="receiptFile" className="af-input" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setFile(e.target.files[0])} />
         </div>
         <Select label="Método de pago" value={method} placeholder="Selecciona (opcional)"
           options={METHOD_OPTIONS} onChange={(e) => setMethod(e.target.value)} />
@@ -157,8 +158,8 @@ export default function PaymentsPage() {
         </>}>
         {error && <div className="af-alert af-alert--error">{error}</div>}
         <div className="af-field">
-          <label className="af-label">Motivo del rechazo</label>
-          <textarea className="af-input" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />
+          <label className="af-label" htmlFor="rejectReason">Motivo del rechazo</label>
+          <textarea id="rejectReason" className="af-input" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />
         </div>
       </Modal>
     </div>

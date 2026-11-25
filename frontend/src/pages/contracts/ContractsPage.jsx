@@ -98,7 +98,9 @@ export default function ContractsPage() {
     catch (err) { window.alert(err.response?.data?.message || 'No se pudo cancelar'); }
   };
 
-  const date = (d) => new Date(d).toLocaleDateString('es-PE');
+  // Fechas sin hora (@db.Date): se guardan a medianoche UTC; mostrarlas en UTC evita
+  // que en Lima (UTC-5) aparezcan un día antes (INC-03).
+  const date = (d) => new Date(d).toLocaleDateString('es-PE', { timeZone: 'UTC' });
   const money = (n) => `S/ ${Number(n).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`;
 
   const columns = [
