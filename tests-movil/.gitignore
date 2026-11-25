@@ -1,0 +1,20 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Credenciales y sesiones guardadas (NO subir)
+.env
+/.auth/
+
+# Resultados generados en cada ejecución
+resultados-movil.json
+evidencias/*
+!evidencias/.gitkeep
+
+# Reportes guardados (línea base antes/después; ~60 MB cada uno, se guardan solo en local)
+/reportes/
