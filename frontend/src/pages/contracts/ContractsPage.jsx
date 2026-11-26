@@ -98,7 +98,7 @@ export default function ContractsPage() {
     catch (err) { window.alert(err.response?.data?.message || 'No se pudo cancelar'); }
   };
 
-  const date = (d) => new Date(d).toLocaleDateString('es-PE');
+  const date = (d) => new Date(d).toLocaleDateString('es-PE', { timeZone: 'UTC' });
   const money = (n) => `S/ ${Number(n).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`;
 
   const columns = [

@@ -80,7 +80,7 @@ export default function PaymentsPage() {
     } catch (err) { setError(err.response?.data?.message || 'No se pudo subir'); }
   };
 
-  const date = (d) => (d ? new Date(d).toLocaleDateString('es-PE') : '—');
+  const date = (d) => (d ? new Date(d).toLocaleDateString('es-PE', { timeZone: 'UTC' }) : '—');
   const money = (n) => `S/ ${Number(n).toLocaleString('es-PE', { minimumFractionDigits: 2 })}`;
 
   const columns = [
