@@ -8,7 +8,7 @@
  * Los nombres de campos coinciden exactamente con prisma/schema.prisma.
  */
 const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const {
   ROLES,
   PROPERTY_TYPE,
