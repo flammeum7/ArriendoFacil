@@ -20,7 +20,8 @@ export default function TenantDashboard() {
 
   const money = (n) =>
     `S/ ${Number(n).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  const date = (d) => (d ? new Date(d).toLocaleDateString('es-PE') : '—');
+  // Vigencia del contrato y vencimiento del pago son fechas sin hora (@db.Date): mostrarlas en UTC (INC-03)
+  const date = (d) => (d ? new Date(d).toLocaleDateString('es-PE', { timeZone: 'UTC' }) : '—');
 
   return (
     <div>

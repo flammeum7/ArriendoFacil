@@ -107,8 +107,8 @@ export default function DocumentsPage() {
           options={[{ value: 'CONTRACT', label: 'Contrato' }, { value: 'INVOICE', label: 'Boleta/Factura' }, { value: 'OTHER', label: 'Otro' }]}
           onChange={(e) => setForm({ ...form, type: e.target.value })} />
         <div className="af-field">
-          <label className="af-label">Archivo (PDF, JPG o PNG · máx 5 MB)</label>
-          <input className="af-input" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setFile(e.target.files[0])} />
+          <label className="af-label" htmlFor="documentFile">Archivo (PDF, JPG o PNG · máx 5 MB)</label>
+          <input id="documentFile" className="af-input" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setFile(e.target.files[0])} />
         </div>
       </Modal>
     </div>

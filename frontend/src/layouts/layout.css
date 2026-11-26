@@ -12,6 +12,7 @@
   display: flex; align-items: center; gap: var(--sp-3); padding: 0.6rem 0.75rem;
   border-radius: var(--radius-sm); color: var(--color-text-muted);
   font-size: var(--fs-sm); font-weight: 500;
+  min-height: 44px; /* área táctil mínima (WCAG 2.5.5) */
 }
 .af-nav__item:hover { background: var(--color-surface-hover); color: var(--color-text); text-decoration: none; }
 .af-nav__item.is-active { background: var(--color-primary-soft); color: var(--color-primary); }
@@ -26,10 +27,14 @@
 .af-header__right { display: flex; align-items: center; gap: var(--sp-4); }
 .af-content { padding: var(--sp-5); flex: 1; }
 
-.af-hamburger { display: none; background: none; border: none; color: var(--color-text); cursor: pointer; }
+/* Hamburguesa y campana: el ícono mide 22-24 px, el área táctil 44 x 44 px */
+.af-hamburger {
+  display: none; background: none; border: none; color: var(--color-text); cursor: pointer;
+  min-width: 44px; min-height: 44px; align-items: center; justify-content: center; margin-left: -10px;
+}
 
 /* Campana */
-.af-bell { position: relative; color: var(--color-text-muted); background: none; border: none; cursor: pointer; display: inline-flex; }
+.af-bell { position: relative; color: var(--color-text-muted); background: none; border: none; cursor: pointer; display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
 .af-bell:hover { color: var(--color-text); }
 .af-bell__badge {
   position: absolute; top: -6px; right: -6px; background: var(--color-danger); color: #fff;

@@ -129,13 +129,13 @@ export default function IncidentsPage() {
         <Select label="Tipo" value={form.type} options={TYPE_OPTIONS} onChange={(e) => setForm({ ...form, type: e.target.value })} />
         <Input label="Título" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
         <div className="af-field">
-          <label className="af-label">Descripción</label>
-          <textarea className="af-input" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <label className="af-label" htmlFor="incidentDescription">Descripción</label>
+          <textarea id="incidentDescription" className="af-input" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         </div>
         <Select label="Prioridad" value={form.priority} options={PRIORITY_OPTIONS} onChange={(e) => setForm({ ...form, priority: e.target.value })} />
         <div className="af-field">
-          <label className="af-label">Imágenes (hasta 3, JPG/PNG · máx 3 MB c/u)</label>
-          <input className="af-input" type="file" accept=".jpg,.jpeg,.png" multiple onChange={(e) => setCreateFiles(e.target.files)} />
+          <label className="af-label" htmlFor="incidentImages">Imágenes (hasta 3, JPG/PNG · máx 3 MB c/u)</label>
+          <input id="incidentImages" className="af-input" type="file" accept=".jpg,.jpeg,.png" multiple onChange={(e) => setCreateFiles(e.target.files)} />
         </div>
       </Modal>
 
@@ -177,16 +177,16 @@ export default function IncidentsPage() {
               <div style={{ marginTop: 'var(--sp-4)' }}>
                 {error && <div className="af-alert af-alert--error">{error}</div>}
                 <div className="af-field">
-                  <label className="af-label">Responder</label>
-                  <textarea className="af-input" rows={2} value={replyMsg} onChange={(e) => setReplyMsg(e.target.value)} />
+                  <label className="af-label" htmlFor="incidentReply">Responder</label>
+                  <textarea id="incidentReply" className="af-input" rows={2} value={replyMsg} onChange={(e) => setReplyMsg(e.target.value)} />
                 </div>
                 {isLandlord && (
                   <Select label="Cambiar estado (opcional)" value={replyStatus} placeholder="Sin cambio"
                     options={STATUS_OPTIONS} onChange={(e) => setReplyStatus(e.target.value)} />
                 )}
                 <div className="af-field">
-                  <label className="af-label">Imágenes (hasta 3)</label>
-                  <input className="af-input" type="file" accept=".jpg,.jpeg,.png" multiple onChange={(e) => setReplyFiles(e.target.files)} />
+                  <label className="af-label" htmlFor="incidentReplyImages">Imágenes (hasta 3)</label>
+                  <input id="incidentReplyImages" className="af-input" type="file" accept=".jpg,.jpeg,.png" multiple onChange={(e) => setReplyFiles(e.target.files)} />
                 </div>
                 <Button onClick={submitReply}>Enviar respuesta</Button>
               </div>

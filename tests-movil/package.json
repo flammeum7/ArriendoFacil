@@ -1,0 +1,21 @@
+{
+  "name": "tests-movil",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:pc": "playwright test --project=\"D-01 PC Chrome\" --project=\"D-02 PC Safari\"",
+    "test:movil": "playwright test --project=\"D-03 Pixel 7\" --project=\"D-04 iPhone 13\" --project=\"D-05 iPad\"",
+    "test:pixel": "playwright test --project=\"D-03 Pixel 7\"",
+    "reporte": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Pruebas móviles y responsive de Arriendo Fácil (APF3, sección 14.1)",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.7",
+    "dotenv": "^18.0.10"
+  }
+}
