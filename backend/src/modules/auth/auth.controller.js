@@ -5,11 +5,16 @@ const authService = require('./auth.service');
 
 const REFRESH_COOKIE = 'refreshToken';
 
+// HM-04: en producción el frontend y la API están en subdominios distintos de onrender.com,
+// que el navegador trata como sitios diferentes; con SameSite=Strict la cookie no se enviaba
+// y la sesión se perdía al recargar. SameSite=None exige Secure (HTTPS). La lectura del
+// accessToken sigue protegida por CORS, que solo permite el origen del frontend.
 function refreshCookieOptions() {
+  const produccion = env.nodeEnv === 'production';
   return {
     httpOnly: true,
-    secure: env.nodeEnv === 'production',
-    sameSite: 'strict',
+    secure: produccion,
+    sameSite: produccion ? 'none' : 'lax',
     path: '/api/auth',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
   };
